@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  border: 2px solid rgb(0, 0, 0);
+  background-color: #2b3031;
+  border-radius: 10px;
+  margin: 1em auto;
+  padding: 25px;
+  width: 95%;
+  min-height: 91.8vh;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  background-color: #242323;
+}
+
+main {
+  width: 95%;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input, select, textarea {
+  font-family: inherit;
+}
