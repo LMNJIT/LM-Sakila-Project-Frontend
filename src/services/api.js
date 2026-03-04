@@ -81,6 +81,24 @@ export const customersAPI = {
       body: JSON.stringify(customerData)
     });
     return handleResponse(response);
+  },
+
+  deleteCustomer: async (customerId) => {
+    const response = await fetch(`${API_BASE_URL}/customers/${customerId}`, {
+      method: 'DELETE'
+    });
+    return handleResponse(response);
+  },
+
+  updateCustomer: async (customerId, updateData) => {
+    const response = await fetch(`${API_BASE_URL}/customers/${customerId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updateData)
+    });
+    return handleResponse(response);
   }
 };
 

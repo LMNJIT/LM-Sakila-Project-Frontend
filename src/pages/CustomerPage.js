@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { customersAPI } from '../services/api';
 import AddCustomer from './AddCustomer';
+import DeleteCustomer from './DeleteCustomer';
 
 // validation function to check search query
 function validateCustomerSearch(query, type) {
@@ -42,6 +43,7 @@ function CustomerPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [allSearchResults, setAllSearchResults] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const ITEMS_PER_PAGE = 21;
 
@@ -141,6 +143,21 @@ function CustomerPage() {
     loadCustomers();
   };
 
+  const handleCustomerDeleted = (customerId) => {
+    // show success message
+    setSuccessMessage(`Customer ID ${customerId} deleted successfully!`);
+    
+    // clear success message after 3 seconds
+    setTimeout(() => {
+      setSuccessMessage('');
+    }, 3000);
+    
+    // reload customers
+    setIsSearching(false);
+    setCurrentPage(1);
+    loadCustomers();
+  };
+
   return (
     <div>
       <h1 className="page-title">Customers</h1>
@@ -196,6 +213,14 @@ function CustomerPage() {
             style={{ backgroundColor: '#ffffff', color: '#000' }}
           >
             Add Customer
+          </button>
+          <button
+            type="button"
+            className="btn btn-search"
+            onClick={() => setShowDeleteModal(true)}
+            style={{ backgroundColor: '#ffffff', color: '#000' }}
+          >
+            Delete Customer
           </button>
           {isSearching && (
             <button 
@@ -273,6 +298,12 @@ function CustomerPage() {
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onCustomerAdded={handleCustomerAdded}
+      />
+
+      <DeleteCustomer
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onCustomerDeleted={handleCustomerDeleted}
       />
     </div>
   );

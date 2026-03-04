@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { customersAPI } from '../services/api';
+import EditCustomer from './EditCustomer';
 
 function CustomerDetails() {
   const { customerId } = useParams();
@@ -9,6 +10,7 @@ function CustomerDetails() {
   const [rentals, setRentals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -36,15 +38,28 @@ function CustomerDetails() {
     }
   };
 
+  const handleCustomerUpdated = (updatedCustomer) => {
+    setCustomer(updatedCustomer);
+  };
+
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!customer) return <div>Customer not found</div>;
 
   return (
     <div>
-      <button onClick={() => navigate(-1)} className="btn btn-search" style={{ marginBottom: '1rem' }}>
-        Back
-      </button>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+        <button onClick={() => navigate(-1)} className="btn btn-search">
+          Back
+        </button>
+        <button
+          onClick={() => setShowEditModal(true)}
+          className="btn btn-search"
+          style={{ backgroundColor: '#ffffff', color: '#000' }}
+        >
+          Edit
+        </button>
+      </div>
 
       <h1 className="page-title">{customer.first_name} {customer.last_name}</h1>
       
@@ -109,6 +124,13 @@ function CustomerDetails() {
           </table>
         </div>
       )}
+
+      <EditCustomer
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        customer={customer}
+        onCustomerUpdated={handleCustomerUpdated}
+      />
     </div>
   );
 }
