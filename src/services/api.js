@@ -11,8 +11,9 @@ const API_BASE_URL = 'http://localhost:5001/api';
 
 const handleResponse = async (response) => {
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'An error occurred' }));
-    throw new Error(error.message || 'Request failed');
+    const error = await response.json().catch(() => ({ error: 'An error occurred' }));
+    // Try error.error first (our backend format), then error.message
+    throw new Error(error.error || error.message || 'Request failed');
   }
   return response.json();
 };
