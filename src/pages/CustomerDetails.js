@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { customersAPI } from '../services/api';
+import { customersAPI, rentalsAPI } from '../services/api';
 import EditCustomer from './EditCustomer';
 
 function CustomerDetails() {
@@ -11,6 +11,9 @@ function CustomerDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [returnLoading, setReturnLoading] = useState(null);
+  const [returnError, setReturnError] = useState(null);
+  const [returnSuccess, setReturnSuccess] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -40,6 +43,28 @@ function CustomerDetails() {
 
   const handleCustomerUpdated = (updatedCustomer) => {
     setCustomer(updatedCustomer);
+  };
+
+  const handleReturnRental = async (rentalId, filmTitle) => {
+    setReturnError(null);
+    setReturnSuccess(null);
+
+    try {
+      setReturnLoading(rentalId);
+      await rentalsAPI.returnRental(rentalId);
+
+      // reload rentals to show updated status
+      const rentalData = await customersAPI.getCustomerRentals(customerId);
+      setRentals(rentalData || []);
+
+      setReturnSuccess(`"${filmTitle}" marked as returned`);
+      setTimeout(() => setReturnSuccess(null), 3000);
+    } catch (err) {
+      console.error('Failed to return rental:', err);
+      setReturnError(err.message || 'Failed to return rental');
+    } finally {
+      setReturnLoading(null);
+    }
   };
 
   if (loading) return <div className="loading">Loading...</div>;
@@ -77,6 +102,16 @@ function CustomerDetails() {
       </div>
 
       <h2 className="section-title">Rental History ({rentals.length})</h2>
+      {returnSuccess && (
+        <div style={{ color: 'green', marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#d4edda', borderRadius: '4px', border: '1px solid #c3e6cb' }}>
+          {returnSuccess}
+        </div>
+      )}
+      {returnError && (
+        <div style={{ color: 'red', marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#f8d7da', borderRadius: '4px', border: '1px solid #f5c6cb' }}>
+          {returnError}
+        </div>
+      )}
       {rentals.length === 0 ? (
         <p>No rentals found</p>
       ) : (
@@ -109,13 +144,21 @@ function CustomerDetails() {
                     }
                   </td>
                   <td style={{ padding: '0.75rem' }}>
-                    <span style={{
-                      padding: '0.25rem 0.75rem',
-                      borderRadius: '4px',
-                      backgroundColor: rental.status === 'returned' ? '#d4edda' : '#fff3cd',
-                      color: rental.status === 'returned' ? '#155724' : '#856404'
-                    }}>
-                      {rental.status}
+                    <span
+                      onClick={() => !rental.return_date && handleReturnRental(rental.rental_id, rental.title)}
+                      style={{
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '4px',
+                        backgroundColor: rental.status === 'returned' ? '#d4edda' : '#fff3cd',
+                        color: rental.status === 'returned' ? '#155724' : '#856404',
+                        cursor: !rental.return_date ? 'pointer' : 'default',
+                        transition: !rental.return_date ? 'opacity 0.2s' : 'none'
+                      }}
+                      onMouseEnter={(e) => !rental.return_date && (e.target.style.opacity = '0.7')}
+                      onMouseLeave={(e) => !rental.return_date && (e.target.style.opacity = '1')}
+                      disabled={returnLoading === rental.rental_id}
+                    >
+                      {returnLoading === rental.rental_id ? 'Returning...' : rental.status}
                     </span>
                   </td>
                 </tr>

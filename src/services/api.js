@@ -117,10 +117,22 @@ export const rentalsAPI = {
   createRental: async (rentalData) => {
     const response = await fetch(`${API_BASE_URL}/rentals`, {
       method: 'POST',
+      mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(rentalData)
+    });
+    return handleResponse(response);
+  },
+
+  returnRental: async (rentalId) => {
+    const response = await fetch(`${API_BASE_URL}/rentals/${rentalId}/return`, {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
     return handleResponse(response);
   }
