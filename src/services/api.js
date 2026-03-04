@@ -70,6 +70,17 @@ export const customersAPI = {
   getCustomerRentals: async (customerId) => {
     const response = await fetch(`${API_BASE_URL}/customers/${customerId}/rentals`);
     return handleResponse(response);
+  },
+
+  createCustomer: async (customerData) => {
+    const response = await fetch(`${API_BASE_URL}/customers`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(customerData)
+    });
+    return handleResponse(response);
   }
 };
 

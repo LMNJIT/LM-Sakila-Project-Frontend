@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { customersAPI } from '../services/api';
+import AddCustomer from './AddCustomer';
 
 // validation function to check search query
 function validateCustomerSearch(query, type) {
@@ -40,6 +41,8 @@ function CustomerPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [allSearchResults, setAllSearchResults] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const ITEMS_PER_PAGE = 21;
 
   useEffect(() => {
@@ -123,9 +126,36 @@ function CustomerPage() {
     setError('');
   };
 
+  const handleCustomerAdded = (newCustomer) => {
+    // show success message
+    setSuccessMessage(`Customer ${newCustomer.first_name} ${newCustomer.last_name} added successfully!`);
+    
+    // clear success message after 3 seconds
+    setTimeout(() => {
+      setSuccessMessage('');
+    }, 3000);
+    
+    // reload customers
+    setIsSearching(false);
+    setCurrentPage(1);
+    loadCustomers();
+  };
+
   return (
     <div>
       <h1 className="page-title">Customers</h1>
+
+      {successMessage && (
+        <div style={{
+          backgroundColor: '#d4edda',
+          color: '#155724',
+          padding: '0.75rem',
+          borderRadius: '4px',
+          marginBottom: '1rem'
+        }}>
+          {successMessage}
+        </div>
+      )}
 
       <form onSubmit={handleSearch} style={{ marginBottom: '1rem' }}>
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
@@ -159,6 +189,14 @@ function CustomerPage() {
         />
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button type="submit" className="btn btn-search">Search</button>
+          <button
+            type="button"
+            className="btn btn-search"
+            onClick={() => setShowAddModal(true)}
+            style={{ backgroundColor: '#ffffff', color: '#000' }}
+          >
+            Add Customer
+          </button>
           {isSearching && (
             <button 
               type="button" 
@@ -200,6 +238,13 @@ function CustomerPage() {
       {totalPages > 1 && !loading && (
         <div className="pagination">
           <button
+            onClick={() => setCurrentPage(1)}
+            disabled={currentPage === 1}
+            className="btn"
+          >
+            First Page
+          </button>
+          <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             className="btn"
@@ -214,8 +259,21 @@ function CustomerPage() {
           >
             Next
           </button>
+          <button
+            onClick={() => setCurrentPage(totalPages)}
+            disabled={currentPage === totalPages}
+            className="btn"
+          >
+            Last Page
+          </button>
         </div>
       )}
+
+      <AddCustomer
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onCustomerAdded={handleCustomerAdded}
+      />
     </div>
   );
 }

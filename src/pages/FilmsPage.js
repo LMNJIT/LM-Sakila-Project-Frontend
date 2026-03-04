@@ -197,6 +197,13 @@ function FilmsPage() {
       {totalPages > 1 && !loading && (
         <div className="pagination">
           <button
+            onClick={() => setCurrentPage(1)}
+            disabled={currentPage === 1}
+            className="btn"
+          >
+            First Page
+          </button>
+          <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             className="btn"
@@ -210,6 +217,13 @@ function FilmsPage() {
             className="btn"
           >
             Next
+          </button>
+          <button
+            onClick={() => setCurrentPage(totalPages)}
+            disabled={currentPage === totalPages}
+            className="btn"
+          >
+            Last Page
           </button>
         </div>
       )}
