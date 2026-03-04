@@ -52,7 +52,7 @@ function FilmsPage() {
       setError(null);
     } catch (err) {
       // FIXME: backend sometimes returns different error format
-      console.error('Error loading films:', err);
+      console.error('error loading films:', err);
       setError('failed to load films');
     } finally {
       setLoading(false);
@@ -91,7 +91,7 @@ function FilmsPage() {
       setFilms(results.slice(0, ITEMS_PER_PAGE));
       setError(null);
     } catch (err) {
-      console.error('Search failed:', err);
+      console.error('search failed', err);
       setError('search failed');
       setFilms([]);
       setAllSearchResults([]);

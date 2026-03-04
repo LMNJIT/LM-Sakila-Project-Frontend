@@ -1,6 +1,5 @@
 const API_BASE_URL = 'http://localhost:5001/api';
 
-// Old approach - was trying to handle different error formats initially
 // const handleErrorResponse = (errorData) => {
 //   if (errorData.error) {
 //     return errorData.error;
@@ -58,8 +57,8 @@ export const customersAPI = {
     return handleResponse(response);
   },
 
-  searchCustomers: async (query) => {
-    const response = await fetch(`${API_BASE_URL}/customers/search?q=${encodeURIComponent(query)}`);
+  searchCustomers: async (query, type = 'id') => {
+    const response = await fetch(`${API_BASE_URL}/customers/search?q=${encodeURIComponent(query)}&type=${encodeURIComponent(type)}`);
     return handleResponse(response);
   }
 };
@@ -69,5 +68,3 @@ export default {
   actorsAPI,
   customersAPI
 };
-
-// TODO: add error logging/monitoring service when we expand this

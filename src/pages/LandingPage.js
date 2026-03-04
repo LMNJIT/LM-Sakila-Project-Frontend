@@ -16,7 +16,6 @@ function LandingPage() {
     try {
       setLoading(true);
       
-      // Tried Promise.all() approach first but had issues with error handling
       // const [filmsRes, actorsRes] = await Promise.all([
       //   filmsAPI.getTopRented(),
       //   actorsAPI.getTopActors()
