@@ -5,6 +5,7 @@ import FilmsPage from './pages/FilmsPage';
 import FilmDetails from './pages/FilmDetails';
 import ActorDetails from './pages/ActorDetails';
 import CustomerPage from './pages/CustomerPage';
+import CustomerDetails from './pages/CustomerDetails';
 import './App.css';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/films/:filmId" element={<FilmDetails />} />
             <Route path="/actors/:actorId" element={<ActorDetails />} />
             <Route path="/customers" element={<CustomerPage />} />
+            <Route path="/customers/:customerId" element={<CustomerDetails />} />
           </Routes>
         </div>
       </div>

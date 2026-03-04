@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { customersAPI } from '../services/api';
 
 // validation function to check search query
@@ -186,11 +187,11 @@ function CustomerPage() {
           {isSearching && <h2 className="section-title">Search Results ({allSearchResults.length})</h2>}
           <div className="grid grid-2">
             {customers.map(customer => (
-              <div key={customer.customer_id} className="card">
+              <Link to={`/customers/${customer.customer_id}`} key={customer.customer_id} className="card" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <h3>{customer.first_name} {customer.last_name}</h3>
                 <p><strong>ID:</strong> {customer.customer_id}</p>
                 <p><strong>Email:</strong> {customer.email}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </>

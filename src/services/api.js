@@ -60,6 +60,16 @@ export const customersAPI = {
   searchCustomers: async (query, type = 'id') => {
     const response = await fetch(`${API_BASE_URL}/customers/search?q=${encodeURIComponent(query)}&type=${encodeURIComponent(type)}`);
     return handleResponse(response);
+  },
+
+  getCustomerById: async (customerId) => {
+    const response = await fetch(`${API_BASE_URL}/customers/${customerId}`);
+    return handleResponse(response);
+  },
+
+  getCustomerRentals: async (customerId) => {
+    const response = await fetch(`${API_BASE_URL}/customers/${customerId}/rentals`);
+    return handleResponse(response);
   }
 };
 
