@@ -19,34 +19,45 @@ const handleResponse = async (response) => {
 
 export const filmsAPI = {
   getAllFilms: async (page = 1, limit = 20) => {
-    const response = await fetch(`${API_BASE_URL}/films?page=${page}&limit=${limit}`);
-    return handleResponse(response);
+    const url = `${API_BASE_URL}/films?page=${page}&limit=${limit}`;
+    try {
+      const response = await fetch(url, { mode: 'cors' });
+      return handleResponse(response);
+    } catch (error) {
+      console.error('Fetch error in getAllFilms:', error);
+      throw error;
+    }
   },
 
   getTopRented: async () => {
-    const response = await fetch(`${API_BASE_URL}/films/top-rented`);
+    const response = await fetch(`${API_BASE_URL}/films/top-rented`, { mode: 'cors' });
     return handleResponse(response);
   },
 
   getFilmById: async (filmId) => {
-    const response = await fetch(`${API_BASE_URL}/films/${filmId}`);
+    const response = await fetch(`${API_BASE_URL}/films/${filmId}`, { mode: 'cors' });
     return handleResponse(response);
   },
 
   searchFilms: async (query, type = 'title') => {
-    const response = await fetch(`${API_BASE_URL}/films/search?q=${encodeURIComponent(query)}&type=${encodeURIComponent(type)}`);
+    const response = await fetch(`${API_BASE_URL}/films/search?q=${encodeURIComponent(query)}&type=${encodeURIComponent(type)}`, { mode: 'cors' });
+    return handleResponse(response);
+  },
+
+  getFilmInventory: async (filmId) => {
+    const response = await fetch(`${API_BASE_URL}/films/${filmId}/inventory`, { mode: 'cors' });
     return handleResponse(response);
   }
 };
 
 export const actorsAPI = {
   getTopActors: async () => {
-    const response = await fetch(`${API_BASE_URL}/actors/top`);
+    const response = await fetch(`${API_BASE_URL}/actors/top`, { mode: 'cors' });
     return handleResponse(response);
   },
 
   getActorById: async (actorId) => {
-    const response = await fetch(`${API_BASE_URL}/actors/${actorId}`);
+    const response = await fetch(`${API_BASE_URL}/actors/${actorId}`, { mode: 'cors' });
     return handleResponse(response);
   }
 };
@@ -102,8 +113,22 @@ export const customersAPI = {
   }
 };
 
+export const rentalsAPI = {
+  createRental: async (rentalData) => {
+    const response = await fetch(`${API_BASE_URL}/rentals`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(rentalData)
+    });
+    return handleResponse(response);
+  }
+};
+
 export default {
   filmsAPI,
   actorsAPI,
-  customersAPI
+  customersAPI,
+  rentalsAPI
 };
